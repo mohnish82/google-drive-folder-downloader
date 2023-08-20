@@ -16,7 +16,7 @@ Workflow is Docker based, so either utilize the full image prepared by the Cypre
 
 The service requires the Google Drive folder Id. The folder Id is part of the shared URL. E.g.
 
-> Shared URL: https://drive.google.com/drive/folders/`28sjdTTTjsvsz1TTKdfasd`?usp=sharing
+> Shared URL: https://drive.google.com/drive/folders/28sjdTTTjsvsz1TTKdfasd?usp=sharing  
 > Folder Id -> 28sjdTTTjsvsz1TTKdfasd
 
 Also, an optional variable `max_download_time_seconds`, can be passed to increase the total run time beyond the default 30 mins, if downloading big files on a slow network. The service ends as soon as the download is complete OR terminates if this max time limit is reached (default: 30 mins).
@@ -26,7 +26,12 @@ A convenient option is to utilize the full bundled image prepared by the Cypress
 
 Executing the following from project root, should download and place the Zip file(s) in the `cypress/downloads` folder.
 ```sh
-$ docker run --rm -v $(pwd):/e2e -w /e2e -e CYPRESS_drive_folder_id=XXX -e CYPRESS_max_download_time_secs=1800 cypress/included
+$ docker run --rm \
+    -v $(pwd):/e2e \
+    -w /e2e \
+    -e CYPRESS_drive_folder_id=XXX \
+    -e CYPRESS_max_download_time_secs=1800 \
+    cypress/included
 ```
 
 ### Application container
@@ -39,5 +44,7 @@ $ docker build -t localhost/google-drive-dwnldr .
 And the built image can then be executed as follows. Remember to mount the folder where you want the Zip file downloaded.
 
 ```sh
-$ docker run --rm -v $(pwd)/cypress/downloads:/app/cypress/downloads localhost/google-drive-dwnldr run --env drive_folder_id=28sjdTTTjsvsz1TTKdfasd
+$ docker run --rm \
+    -v $(pwd)/cypress/downloads:/app/cypress/downloads \
+    localhost/google-drive-dwnldr run --env drive_folder_id=28sjdTTTjsvsz1TTKdfasd
 ```
