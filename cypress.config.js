@@ -6,7 +6,6 @@ const appTasks = {
 	downloadComplete(fdr) {
 		return new Promise((resolve, reject) => {
 			try {
-				console.log('download folder: ', fdr)
 				while (true) {
 					const partialFilesExist = fs.readdirSync(fdr)
 									.filter(f => !f.endsWith('.zip'))
@@ -25,25 +24,27 @@ const appTasks = {
 				}
 				resolve(false)
 			} catch (err) {
-				console.log(`\t :: ${err}`)
+				console.log(err)
 				resolve(false)
 			}
 		})
 	},
 	log(msg) {
-		console.log(msg)
+		console.log(`\t :: ${msg}`)
 		return null
 	}
 }
 
 module.exports = defineConfig({
   e2e: {
-	baseUrl: 'https://drive.google.com/drive/folders/',
-	watchForFileChanges: false,
-	taskTimeout: 30*60*1000,
-	video: false,
-    setupNodeEvents(on, config) {
-		on('task', appTasks)
-    }
+		baseUrl: 'https://drive.google.com/drive/folders/',
+		watchForFileChanges: false,
+		video: false,
+		setupNodeEvents(on, config) {
+			on('task', appTasks)
+		},
+		env: {
+			max_download_time_secs: 30*60
+		}
   }
 })

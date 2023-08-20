@@ -1,7 +1,12 @@
 describe('Download Google Drive folder', () => {
 	const downloadsFolder = Cypress.config('downloadsFolder')
-	const driveFolderId = Cypress.env('driveFolderId')
-	const maxDownloadTime = Cypress.env('maxDownloadTimeSeconds')
+	const driveFolderId = Cypress.env('drive_folder_id')
+	const maxTime = Cypress.env('max_download_time_secs')
+
+	before(() => {
+		cy.task('log', `Using drive_folder_id: ${driveFolderId}`)
+		cy.task('log', `Using max_download_time: ${maxTime} secs`)
+	})
 
 	it('zip download complete', () => {
 		cy.visit(driveFolderId)
@@ -15,7 +20,7 @@ describe('Download Google Drive folder', () => {
 		cy.task('log', 'ZIP file download started')
 
 		// wait until full zip file is downloaded
-		cy.task('downloadComplete', downloadsFolder, { timeout: maxDownloadTime * 1000 })
+		cy.task('downloadComplete', downloadsFolder, { timeout: maxTime * 1000 })
 			.then(result => {
 				result && cy.task('log', 'DONE. Download folder: ' + downloadsFolder)
 				expect(result).to.be.true
